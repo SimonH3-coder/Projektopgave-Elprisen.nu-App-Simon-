@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { getElpris} from './api/getElpris'
-import { ElType } from './types'
+import { getPrisel } from './api/getPrisel'
 import { Navbar } from './components/Navbar'
+import { Homepage } from './pages/Homepage'
 import './App.css'
 
 function App() {
-  const [elprisData, setElprisData] = useState<ElType[] | null>(null)
+  const [elprisData, setElprisData] = useState(null)
 
   useEffect(() => {
     const getData = async () => {
       try {
         const elpris = await getElpris()
-        console.log(elpris);
-        setElprisData(elpris)
+        const prisel = await getPrisel()
+        console.log(elpris, prisel);
+        setElprisData({ elpris, prisel })
 
       }catch (error) {
         console.error(error)
@@ -21,13 +23,16 @@ function App() {
     }
     getData()
   }, [])
+
+  console.log(elprisData);
+  
   
 
   return (
     <Router>
       <Navbar />
       <Routes>
-        <Route path="/" element={<div>Home</div>} />
+        <Route path="/" element={<Homepage />} />
         <Route path="/about" element={<div>About</div>} />
       </Routes>
     </Router>
